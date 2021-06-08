@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 from tqdm.auto import tqdm
 import shutil as sh
+import fileinput
 
 
 def parse_start_arguments():
@@ -37,7 +38,7 @@ def get_default_config(args):
     log_dir = os.path.join(args.log_dir, datetime.now().strftime('%Y-%m-%d_%H_%M_%S'))
     os.makedirs(log_dir, exist_ok=True)
 
-    if args.dataset_processed:
+    if args.preprocessed:
         dataset_yaml = os.path.join(args.dataset, "dataset.yaml")
         preprocessed = True
     else:
@@ -116,11 +117,54 @@ def convert_dataset(config: dict):
         f.write(f"names: ['wheat']\n")
 
 
+def rewrite_yolo_train():
+    """
+    Changes the train.py of YOLOv5 so it can be run from a python script directly
+    :return:
+    """
+    orig_filename = os.path.join(config["yolov5_dir"], "train.py")
+    new_filename = os.path.join(config["yolov5_dir"], "train_fixed.py")
+
+    sh.copy(orig_filename, new_filename)
+
+    with open(new_filename, 'r') as file:
+        filedata = file.read()
+
+    # Replace the target strings
+    main_replacement_text = "if __name__ == '__main__':\n    import sys\n    main(sys.argv[1:])\n"
+    filedata = filedata.replace("if __name__ == '__main__':", "def main(args):")
+    filedata = filedata.replace("parser = argparse.ArgumentParser()", "parser = argparse.ArgumentParser(args)")
+
+    # Write the file out again
+    with open(new_filename, 'w') as file:
+        file.write(filedata)
+
+    with open(new_filename, "a+") as f:
+        f.write("\n\n")
+        f.write(main_replacement_text)
+
+
 if __name__ == "__main__":
     args = parse_start_arguments()
     config = get_default_config(args)
     if not config["dataset_processed"]:
         convert_dataset(config)
 
+    rewrite_yolo_train()
+
+    import yolov5.train_fixed as yolo_train
+    yolo_train.main(["--img", "1024",
+                     "--batch", "10",
+                     "--epochs", "3",
+                     "--data", config["dataset_yaml"],
+                     "--cfg", os.path.join(config['yolov5_dir'], "models", "hub", "tolov5s.yaml"),
+                     "--name", "yolov5s_wheat",
+                     "--device", "0",
+                     "--adam",
+                     "--workers", "10",
+                     "--project", config["log_dir"],
+                     "--save_period", "1",
+
+                     ])
 
     print("FINISHED")
