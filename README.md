@@ -10,7 +10,8 @@ The competition is already over, so the goal of this pet project is to
 get a relatively fast solution which can be actually applied in the real
 software products.
 
-### Detector choise
+### Detector choice
+#### Architecture
 R-CNN models won't be considered due to their 
 2-step nature leading to higher processing times.
 
@@ -29,4 +30,17 @@ accuracy comparing to other detectors.
 I've decided to utilize YOLOv5 since is may fit the task in terms of
 training and inference time. YOLOv5 became a source of controversy and turned out to be
 worse than YOLOv4 in some tasks. I wanted to check how it performs at this
-specific task
+specific task.
+
+#### Dataset size
+Another reason of choosing smaller detector is the amount of available data. Unlike COCO with its 200K+
+labeled images, current dataset contains ~3.5K images. Complex models
+benefit from large datasets, but they struggle in generalizing in fewer samples.
+
+
+### Dataset
+Wheat Detection Dataset consists of photos of wheat of different types
+and colors on complex backgrounds.
+- train set: 3422 images
+- test set: 10 images
+Images size: 1024⨯1024
