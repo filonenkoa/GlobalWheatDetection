@@ -22,7 +22,16 @@ def parse_start_arguments():
                         help='Log dir')
     parser.add_argument('--preprocessed', action='store_true',
                         help='Is dataset preprocessed')
-
+    parser.add_argument('--img', metavar='N', type=int, default=1024,
+                        help='Image size')
+    parser.add_argument('--batch', metavar='N', type=int, default=2,
+                        help='Batch size')
+    parser.add_argument('--epochs', metavar='N', type=int, default=100,
+                        help='Number of epochs')
+    parser.add_argument('--cpu_workers', metavar='N', type=int, default=4,
+                        help='Number of cpu workers to process the dataset')
+    parser.add_argument('--save_period', metavar='N', type=int, default=10,
+                        help='Save model each save_period epochs')
     args = parser.parse_args()
     return args
 
@@ -53,7 +62,12 @@ def get_default_config(args):
         train_img_dir=os.path.join(args.dataset, "train"),
         log_dir=log_dir,
         dataset_yaml=dataset_yaml,
-        dataset_processed=preprocessed
+        dataset_processed=preprocessed,
+        image_size=args.img,
+        batch=args.batch,
+        epochs=args.epochs,
+        cpu_workers=args.cpu_workers,
+        save_period=args.save_period
     )
     return config
 
@@ -156,16 +170,17 @@ if __name__ == "__main__":
     rewrite_yolo_train()
 
     import yolov5.train_fixed as yolo_train
-    yolo_train.main(["--img", "256",
-                     "--batch", "96",
-                     "--epochs", "200",
+    yolo_train.main(["--img", config["image_size"],
+                     "--batch", config["batch"],
+                     "--epochs", config["epochs"],
                      "--data", config["dataset_yaml"],
                      "--cfg", os.path.join(config['yolov5_dir'], "models", "yolov5s.yaml"),
                      "--project", "yolov5s_wheat",
                      "--device", "0",
                      "--adam",
-                     "--workers", "10",
+                     "--workers", config["cpu_workers"],
                      "--name", config["log_dir"],
-                     "--save_period", "1"])
+                     "--save_period", config["save_period"],
+                     "--single-cls"])
 
     print("FINISHED")

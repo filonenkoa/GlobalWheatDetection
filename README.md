@@ -1,6 +1,8 @@
 # Global Wheat Detection
 The implementation of deep learning approach for wheat detection.
 
+![](https://storage.googleapis.com/kaggle-competitions/kaggle/19989/logos/header.png?t=2020-04-20-18-13-31)
+
 The full problem was presented here:
 https://www.kaggle.com/c/global-wheat-detection
 
@@ -38,15 +40,19 @@ labeled images, current dataset contains ~3.5K images. Complex models
 benefit from large datasets, but they struggle in generalizing in fewer samples.
 
 
-### Dataset
+## Dataset
 Wheat Detection Dataset consists of photos of wheat of different types
 and colors on complex backgrounds.
 - train set: 3422 images
 - test set: 10 images
 Images size: 1024⨯1024
   
+Objects are quite small on images. In the most cases, width and height
+of wheat are smaller than 10% of the image side size. The distribution
+of object sizes is shown below:
+![Object sizes](./images/gt_size_distribution.jpg){: height="128px" width="128px"}
 
-### Training
+## Training
 Before you can run the training, you should clone the YOLOv5 repository
 
 ```git clone https://github.com/ultralytics/yolov5```
@@ -61,3 +67,64 @@ The converted dataset is stored into ```--log_dir```.
 If you re-run the training, and the dataset is already converted, you can
 provide the ```--preprocessed``` argument and set the folder of the
 preprocessed dataset by ```--dataset```.
+
+
+## Experiments
+Train data were divided into train and validation sets at 4/1 ratio.
+- Train set = 2699 images
+- Validation set = 674 images
+
+
+### YOLOv5s, 256 px image size
+In the first experiment, the image side size was set to 256 px to check
+if the network can detect wheat when it is very small
+(20-30 px side size on average).
+The training is performed with the ```--evolve``` key that varies
+training and augmentation hyperparameters.
+Batch size = 96. Epochs = 200.
+
+#### Processing time
+On RTX 2080 Super training of a single epoch took ~10 seconds.
+Evaluation took ~15 seconds.
+
+#### Result
+I trained the network for 200 epochs. mAP increased at very slow rate by that time;
+however, there is still room for improvement, but it will take much more time.
+
+###### Validation set
+
+- mAP_0.5:0.95: 0.4721
+- mAP_0.5: 0.9058
+
+###### Test set
+> Model Summary: 224 layers, 7053910 parameters, 0 gradients
+
+>image 1/10 ...\2fd875eaa.jpg: 256x256 29 wheats, Done. (0.019s)
+
+>image 2/10 ...\348a992bb.jpg: 256x256 36 wheats, Done. (0.017s)
+
+>image 3/10 ...\51b3e36ab.jpg: 256x256 27 wheats, Done. (0.016s)
+
+>image 4/10 ...\51f1be19e.jpg: 256x256 24 wheats, Done. (0.016s)
+
+>image 5/10 ...\53f253011.jpg: 256x256 30 wheats, Done. (0.016s)
+
+>image 6/10 ...\796707dd7.jpg: 256x256 13 wheats, Done. (0.016s)
+
+>image 7/10 ...\aac893a91.jpg: 256x256 26 wheats, Done. (0.017s)
+
+>image 8/10 ...\cb8d261a3.jpg: 256x256 26 wheats, Done. (0.016s)
+
+>image 9/10 ...\cc3532ff6.jpg: 256x256 26 wheats, Done. (0.017s)
+
+>image 10/10 ...\f5a1f0358.jpg: 256x256 27 wheats, Done. (0.016s)
+
+Average inference time 16 ms
+
+Visually, detections are not bad at all.
+![](images\YOLOv5s_256px\2fd875eaa.jpg){: height="256px" width="256px"}
+All detection visualizations on the test set can be found at ```images\YOLOv5s_256px``` directory.
+
+[Training log](https://wandb.ai/filonenkoa/yolov5s_wheat/reports/GlobalWheatDetection_256px--Vmlldzo3NjIzMzc?accessToken=41i9q2mq4llx4wgyy2byv1eaibtj4a2i8iota5tryoxn6sjhdm4hzajkb4uic9fa)
+
+Checkpoint is at ```checkpoints``` directory.
