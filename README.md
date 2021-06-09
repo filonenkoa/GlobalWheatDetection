@@ -44,3 +44,20 @@ and colors on complex backgrounds.
 - train set: 3422 images
 - test set: 10 images
 Images size: 1024⨯1024
+  
+
+### Training
+Before you can run the training, you should clone the YOLOv5 repository
+
+```git clone https://github.com/ultralytics/yolov5```
+
+and then provide the path to **train.py** via ```--yolo_dir``` argument.
+
+Unpack the wheat dataset and provide its directory via ```--dataset```.
+The dataset will be automatically converted into YOLOv5 format.
+
+The converted dataset is stored into ```--log_dir```.
+
+If you re-run the training, and the dataset is already converted, you can
+provide the ```--preprocessed``` argument and set the folder of the
+preprocessed dataset by ```--dataset```.

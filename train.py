@@ -112,7 +112,7 @@ def convert_dataset(config: dict):
     # Save yaml file containing dataset data to be used during training
     with open(config["dataset_yaml"], "w+") as f:
         f.write(f"train: {os.path.abspath(out_dir_train_images)}\n")
-        f.write(f"val: {os.path.abspath(out_dir_train_images)}\n")
+        f.write(f"val: {os.path.abspath(out_dir_val_images)}\n")
         f.write(f"nc: 1\n")
         f.write(f"names: ['wheat']\n")
 
@@ -125,6 +125,7 @@ def rewrite_yolo_train():
     orig_filename = os.path.join(config["yolov5_dir"], "train.py")
     new_filename = os.path.join(config["yolov5_dir"], "train_fixed.py")
 
+
     sh.copy(orig_filename, new_filename)
 
     with open(new_filename, 'r') as file:
@@ -133,7 +134,9 @@ def rewrite_yolo_train():
     # Replace the target strings
     main_replacement_text = "if __name__ == '__main__':\n    import sys\n    main(sys.argv[1:])\n"
     filedata = filedata.replace("if __name__ == '__main__':", "def main(args):")
-    filedata = filedata.replace("parser = argparse.ArgumentParser()", "parser = argparse.ArgumentParser(args)")
+    # filedata = filedata.replace("parser = argparse.ArgumentParser()", "parser = argparse.ArgumentParser(args)")
+    filedata = filedata.replace("opt = parser.parse_args()", "opt = parser.parse_args(args)")
+
 
     # Write the file out again
     with open(new_filename, 'w') as file:
@@ -153,18 +156,16 @@ if __name__ == "__main__":
     rewrite_yolo_train()
 
     import yolov5.train_fixed as yolo_train
-    yolo_train.main(["--img", "1024",
-                     "--batch", "10",
-                     "--epochs", "3",
+    yolo_train.main(["--img", "256",
+                     "--batch", "96",
+                     "--epochs", "200",
                      "--data", config["dataset_yaml"],
-                     "--cfg", os.path.join(config['yolov5_dir'], "models", "hub", "tolov5s.yaml"),
-                     "--name", "yolov5s_wheat",
+                     "--cfg", os.path.join(config['yolov5_dir'], "models", "yolov5s.yaml"),
+                     "--project", "yolov5s_wheat",
                      "--device", "0",
                      "--adam",
                      "--workers", "10",
-                     "--project", config["log_dir"],
-                     "--save_period", "1",
-
-                     ])
+                     "--name", config["log_dir"],
+                     "--save_period", "1"])
 
     print("FINISHED")
