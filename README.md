@@ -50,6 +50,7 @@ Images size: 1024⨯1024
 Objects are quite small on images. In the most cases, width and height
 of wheat are smaller than 10% of the image side size. The distribution
 of object sizes is shown below:
+
 ![Object sizes](./images/gt_size_distribution.jpg)
 
 ## Training
