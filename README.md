@@ -186,12 +186,12 @@ All detection visualizations on the test set can be found at ```images\YOLOv5s_1
 Checkpoints are at the ```checkpoints``` directory.
 
 
-### Conclusion
-#### Processing time
+## Conclusion
+### Processing time
 There is 25% difference in inference + NMS time between 256⨯256 and 1024⨯1024 image sizes (16 vs 20 ms 
 respectively) on RTX 2080 Super meaning that most os operations are parallelized well.
 
-#### Detection performance
+### Detection performance
 While there is a noticeable difference in mAP on validation set 256⨯256 and 1024⨯1024 (0.4721 vs 0.5370),
 visually the network have similar performance. They both could not detect wheat in the bottom-left corner 
 of ```796707dd7.jpg``` image in the test set. The 1024 px version detects better on image borders.
