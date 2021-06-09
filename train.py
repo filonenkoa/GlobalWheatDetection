@@ -22,15 +22,15 @@ def parse_start_arguments():
                         help='Log dir')
     parser.add_argument('--preprocessed', action='store_true',
                         help='Is dataset preprocessed')
-    parser.add_argument('--img', metavar='N', type=int, default=1024,
+    parser.add_argument('--img', metavar='N', type=str, default='1024',
                         help='Image size')
-    parser.add_argument('--batch', metavar='N', type=int, default=2,
+    parser.add_argument('--batch', metavar='N', type=str, default='2',
                         help='Batch size')
-    parser.add_argument('--epochs', metavar='N', type=int, default=100,
+    parser.add_argument('--epochs', metavar='N', type=str, default='100',
                         help='Number of epochs')
-    parser.add_argument('--cpu_workers', metavar='N', type=int, default=4,
+    parser.add_argument('--cpu_workers', metavar='N', type=str, default='4',
                         help='Number of cpu workers to process the dataset')
-    parser.add_argument('--save_period', metavar='N', type=int, default=10,
+    parser.add_argument('--save_period', metavar='N', type=str, default='10',
                         help='Save model each save_period epochs')
     args = parser.parse_args()
     return args

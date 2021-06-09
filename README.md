@@ -127,6 +127,75 @@ Visually, detections are not bad at all.
 
 All detection visualizations on the test set can be found at ```images\YOLOv5s_256px``` directory.
 
-[Training log](https://wandb.ai/filonenkoa/yolov5s_wheat/reports/GlobalWheatDetection_256px--Vmlldzo3NjIzMzc?accessToken=41i9q2mq4llx4wgyy2byv1eaibtj4a2i8iota5tryoxn6sjhdm4hzajkb4uic9fa)
+### YOLOv5s, 1024 px image size
+In the second experiment, the image side size was set to the original 
+1024 px to check if I there is an advantage of making the network
+see the wheat heads at high resolution.
+The training is performed with the ```--evolve``` key that varies
+training and augmentation hyperparameters.
+Batch size = 8. Epochs = 100.
 
-Checkpoint is at ```checkpoints``` directory.
+#### Processing time
+On RTX 2080 Super training of a single epoch took ~60 seconds.
+Evaluation took ~21 seconds.
+
+#### Result
+I trained the network for 100 epochs. mAP increased at very slow rate by that time;
+however, there is still room for improvement, but it will take much more time.
+
+###### Validation set
+
+- mAP_0.5:0.95: 0.5370
+- mAP_0.5: 0.925
+
+###### Test set
+> image 1/10 ...\2fd875eaa.jpg: 1024x1024 30 wheats, Done. (0.022s)
+
+> image 2/10 ...\348a992bb.jpg: 1024x1024 37 wheats, Done. (0.020s)
+
+> image 3/10 ...\51b3e36ab.jpg: 1024x1024 26 wheats, Done. (0.020s)
+
+> image 4/10 ...\51f1be19e.jpg: 1024x1024 18 wheats, Done. (0.020s)
+
+> image 5/10 ...\53f253011.jpg: 1024x1024 29 wheats, Done. (0.020s)
+
+> image 6/10 ...\796707dd7.jpg: 1024x1024 17 wheats, Done. (0.020s)
+
+> image 7/10 ...\aac893a91.jpg: 1024x1024 21 wheats, Done. (0.020s)
+
+> image 8/10 ...\cb8d261a3.jpg: 1024x1024 25 wheats, Done. (0.020s)
+
+> image 9/10 ...\cc3532ff6.jpg: 1024x1024 27 wheats, Done. (0.020s)
+
+> image 10/10 ...\f5a1f0358.jpg: 1024x1024 27 wheats, Done. (0.019s)
+
+Average inference + NMS time = **20 ms**.
+
+Visually, detections are not bad at all.
+
+![Test result](./images/YOLOv5s_1024px/2fd875eaa_256px.jpg)
+
+All detection visualizations on the test set can be found at ```images\YOLOv5s_1024px``` directory.
+
+
+#### Data
+
+[Training log at Weights and Biases](https://wandb.ai/filonenkoa/yolov5s_wheat/reports/Global-Wheat-Detection-with-YOLOv5s--Vmlldzo3NjM0NzM?accessToken=g5t5f8t9s6taq8dqw9xvwtvhy8kdrje1pg8z0n60r8vs5ezv1rlcgwyovkvm782v)
+
+Checkpoints are at the ```checkpoints``` directory.
+
+
+### Conclusion
+#### Processing time
+There is 25% difference in inference + NMS time between 256⨯256 and 1024⨯1024 image sizes (16 vs 20 ms 
+respectively) on RTX 2080 Super meaning that most os operations are parallelized well.
+
+#### Detection performance
+While there is a noticeable difference in mAP on validation set 256⨯256 and 1024⨯1024 (0.4721 vs 0.5370),
+visually the network have similar performance. They both could not detect wheat in the bottom-left corner 
+of ```796707dd7.jpg``` image in the test set. The 1024 px version detects better on image borders.
+
+
+256 px |  1024 px 
+:---:|:---:
+![](./images/YOLOv5s_256px/796707dd7.jpg)      |  ![](./images/YOLOv5s_1024px/796707dd7.jpg)
