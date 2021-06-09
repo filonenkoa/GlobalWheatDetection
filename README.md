@@ -37,7 +37,7 @@ specific task.
 #### Dataset size
 Another reason of choosing smaller detector is the amount of available data. Unlike COCO with its 200K+
 labeled images, current dataset contains ~3.5K images. Complex models
-benefit from large datasets, but they struggle in generalizing in fewer samples.
+benefit from large datasets, but they struggle in generalizing on fewer samples.
 
 
 ## Dataset
@@ -119,7 +119,7 @@ however, there is still room for improvement, but it will take much more time.
 
 >image 10/10 ...\f5a1f0358.jpg: 256x256 27 wheats, Done. (0.016s)
 
-Average inference time 16 ms
+Average inference + NMS time = 16 ms.
 
 Visually, detections are not bad at all.
 
