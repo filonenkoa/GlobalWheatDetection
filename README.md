@@ -50,7 +50,7 @@ Images size: 1024⨯1024
 Objects are quite small on images. In the most cases, width and height
 of wheat are smaller than 10% of the image side size. The distribution
 of object sizes is shown below:
-![Object sizes](./images/gt_size_distribution.jpg){: height="128px" width="128px"}
+![Object sizes](./images/gt_size_distribution.jpg)
 
 ## Training
 Before you can run the training, you should clone the YOLOv5 repository
@@ -122,7 +122,9 @@ however, there is still room for improvement, but it will take much more time.
 Average inference time 16 ms
 
 Visually, detections are not bad at all.
-![](images\YOLOv5s_256px\2fd875eaa.jpg){: height="256px" width="256px"}
+
+![Test result](./images/YOLOv5s_256px/2fd875eaa_256px.jpg)
+
 All detection visualizations on the test set can be found at ```images\YOLOv5s_256px``` directory.
 
 [Training log](https://wandb.ai/filonenkoa/yolov5s_wheat/reports/GlobalWheatDetection_256px--Vmlldzo3NjIzMzc?accessToken=41i9q2mq4llx4wgyy2byv1eaibtj4a2i8iota5tryoxn6sjhdm4hzajkb4uic9fa)
